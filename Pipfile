@@ -4,7 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = "*"
+fastapi = "==0.89.1"
+sqlalchemy = "==1.4.46"
+python-decouple = "==3.7"
 
 [dev-packages]
 
