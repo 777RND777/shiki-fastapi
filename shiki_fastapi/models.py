@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
+import enum
+
+from sqlalchemy import Column, Enum, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -29,11 +31,24 @@ class Studio(Base):
 class Anime(Base):
     __tablename__ = 'animes'
 
+    class Kind(enum.Enum):
+        TV_SERIES = 'tv'
+        MOVIE = 'movie'
+        OVA = 'ova'
+        ONA = 'ona'
+        SPECIAL = 'special'
+        MUSIC = 'music'
+
+    class Status(enum.Enum):
+        ANNOUNCED = 'anons'
+        AIRING = 'ongoing'
+        FINISHED = 'released'
+
     pk = Column(Integer, primary_key=True, index=True)
     title = Column(String, unique=True)
-    kind = Column(String)  # choices
+    kind = Column(Enum(Kind))
     episodes = Column(Integer)
-    status = Column(String)  # choices
+    status = Column(Enum(Status))
     genres = relationship('Genre', back_populates='animes')
     score = Column(Float)
     studio_id = Column(Integer, ForeignKey('studios.pk'))
@@ -47,12 +62,20 @@ class Anime(Base):
 class Review(Base):
     __tablename__ = 'reviews'
 
+    class Status(enum.Enum):
+        PLANNED_TO_WATCH = 'planned'
+        WATCHING = 'watching'
+        REWATCHING = 'rewatching'
+        COMPLETED = 'completed'
+        ON_HOLD = 'on_hold'
+        DROPPED = 'dropped'
+
     pk = Column(Integer, primary_key=True, index=True)
     anime_id = Column(Integer, ForeignKey('animes.pk'))
     anime = relationship('Anime', back_populates='reviews')
     user_id = Column(Integer, ForeignKey('users.pk'))
     user = relationship('User', back_populates='reviews')
-    status = Column(String)  # choices
+    status = Column(Enum(Status))
     watched_episodes = Column(Integer)
     score = Column(Integer)
     text = Column(Text)
