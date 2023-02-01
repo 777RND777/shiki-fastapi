@@ -1,21 +1,30 @@
 import enum
 
-from sqlalchemy import Column, Enum, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, Enum, Float, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.orm import relationship
 
 from .database import Base
 
 
-# class Genre(Base):
-#     __tablename__ = 'genres'
-#
-#     pk = Column(Integer, primary_key=True)
-#     name = Column(String, unique=True)
-#
-#     animes = relationship('Anime', back_populates='genres', lazy=True)
-#
-#     def __str__(self):
-#         return self.name
+association_table = Table(
+    "association_table",
+    Base.metadata,
+    Column("anime_pk", ForeignKey("animes.pk")),
+    Column("genre_pk", ForeignKey("genres.pk")),
+)
+
+
+class Genre(Base):
+    __tablename__ = 'genres'
+
+    pk = Column(Integer, primary_key=True)
+    name = Column(String, unique=True)
+
+    animes = relationship('Anime', secondary=association_table,
+                          back_populates='genres', lazy=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Studio(Base):
@@ -51,7 +60,8 @@ class Anime(Base):
     kind = Column(Enum(Kind))
     episodes = Column(Integer)
     status = Column(Enum(Status))
-    # genres = relationship('Genre', back_populates='animes', lazy=True)
+    genres = relationship('Genre', secondary=association_table,
+                          back_populates='animes', lazy=True)
     score = Column(Float)
     studio_id = Column(Integer, ForeignKey('studios.pk'))
     studio = relationship('Studio', back_populates='animes', lazy=True)
