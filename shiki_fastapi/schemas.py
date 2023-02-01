@@ -4,20 +4,20 @@ from typing import Union
 from pydantic import BaseModel
 
 
-class GenreBase(BaseModel):
-    name: str
-
-
-class GenreCreate(GenreBase):
-    pass
-
-
-class Genre(GenreBase):
-    pk: int
-    animes: list['Anime']
-
-    class Config:
-        orm_mode = True
+# class GenreBase(BaseModel):
+#     name: str
+#
+#
+# class GenreCreate(GenreBase):
+#     pass
+#
+#
+# class Genre(GenreBase):
+#     pk: int
+#     animes: list['Anime']
+#
+#     class Config:
+#         orm_mode = True
 
 
 class StudioBase(BaseModel):
@@ -53,10 +53,10 @@ class AnimeStatusEnum(str, Enum):
 
 class AnimeBase(BaseModel):
     title: str
-    kind: AnimeKindEnum
+    kind: 'AnimeKindEnum'
     episodes: int
-    status: AnimeStatusEnum
-    genres: list[Genre]
+    status: 'AnimeStatusEnum'
+    # genres: list['Genre']
     synopsis: str
 
     class Config:
@@ -88,7 +88,7 @@ class ReviewStatusEnum(str, Enum):
 class ReviewBase(BaseModel):
     anime_id: int
     user_id: int
-    status: ReviewStatusEnum
+    status: 'ReviewStatusEnum'
 
     class Config:
         use_enum_values = True
@@ -120,6 +120,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     pk: int
+    reviews: list['Review']
 
     class Config:
         orm_mode = True
