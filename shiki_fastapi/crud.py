@@ -3,12 +3,20 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
+def get_anime_list(db: Session):
+    return db.query(models.Anime).all()
+
+
+def get_anime(db: Session, title: str):
+    return db.query(models.Anime).filter(models.Anime.title == title).first()
+
+
+def get_user_list(db: Session):
+    return db.query(models.User).all()
+
+
 def get_user(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
-
-
-def get_user_list(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
 
 
 def create_user(db: Session, user: schemas.UserCreate):

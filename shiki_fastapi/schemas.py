@@ -1,23 +1,21 @@
-from enum import Enum
 from typing import Union
 
 from pydantic import BaseModel
 
 
-# class GenreBase(BaseModel):
-#     name: str
-#
-#
-# class GenreCreate(GenreBase):
-#     pass
-#
-#
-# class Genre(GenreBase):
-#     pk: int
-#     animes: list['Anime']
-#
-#     class Config:
-#         orm_mode = True
+class GenreBase(BaseModel):
+    name: str
+
+
+class GenreCreate(GenreBase):
+    pass
+
+
+class Genre(GenreBase):
+    pk: int
+
+    class Config:
+        orm_mode = True
 
 
 class StudioBase(BaseModel):
@@ -36,31 +34,13 @@ class Studio(StudioBase):
         orm_mode = True
 
 
-class AnimeKindEnum(str, Enum):
-    TV_SERIES = 'tv'
-    MOVIE = 'movie'
-    OVA = 'ova'
-    ONA = 'ona'
-    SPECIAL = 'special'
-    MUSIC = 'music'
-
-
-class AnimeStatusEnum(str, Enum):
-    ANNOUNCED = 'anons'
-    AIRING = 'ongoing'
-    FINISHED = 'released'
-
-
 class AnimeBase(BaseModel):
     title: str
-    kind: 'AnimeKindEnum'
+    kind: str
     episodes: int
-    status: 'AnimeStatusEnum'
-    # genres: list['Genre']
+    status: str
+    genres: list['GenreBase']
     synopsis: str
-
-    class Config:
-        use_enum_values = True
 
 
 class AnimeCreate(AnimeBase):
@@ -69,29 +49,17 @@ class AnimeCreate(AnimeBase):
 
 class Anime(AnimeBase):
     pk: int
-    score: float
-    studio: str
+    score: float = None
+    studio: 'StudioBase'
 
     class Config:
         orm_mode = True
 
 
-class ReviewStatusEnum(str, Enum):
-    PLANNED_TO_WATCH = 'planned'
-    WATCHING = 'watching'
-    REWATCHING = 'rewatching'
-    COMPLETED = 'completed'
-    ON_HOLD = 'on_hold'
-    DROPPED = 'dropped'
-
-
 class ReviewBase(BaseModel):
     anime_id: int
     user_id: int
-    status: 'ReviewStatusEnum'
-
-    class Config:
-        use_enum_values = True
+    status: str
 
 
 class ReviewCreate(ReviewBase):
