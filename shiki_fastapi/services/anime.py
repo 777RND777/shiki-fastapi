@@ -11,15 +11,15 @@ def get_anime(db: Session, title: str):
     return db.query(models.Anime).filter(models.Anime.title == title).first()
 
 
-def create_review(db: Session, review: schemas.ReviewCreate, anime: models.Anime):
+def create_review(db: Session, review: schemas.ReviewCreate, anime: models.Anime, user_id: int):
     db_review = db.query(models.Review).filter((models.Review.anime_id == anime.pk) &
-                                               (models.Review.user_id == review.user_id)).first()
+                                               (models.Review.user_id == user_id)).first()
     if db_review:
         return update_review(db, db_review, review)
 
     if review.status == models.REVIEW_STATUS_CHOICE['COMPLETED']:
         review.watched_episodes = anime.episodes
-    db_review = models.Review(anime_id=anime.pk, user_id=review.user_id,
+    db_review = models.Review(anime_id=anime.pk, user_id=user_id,
                               status=review.status, watched_episodes=review.watched_episodes,
                               score=review.score, text=review.text)
     db.add(db_review)

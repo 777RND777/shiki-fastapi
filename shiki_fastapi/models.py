@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Table, Text, types
+from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String, Table, Text, types
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -116,6 +116,7 @@ class User(Base):
     pk = Column(Integer, primary_key=True)
     username = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
+    is_admin = Column(Boolean, default=False)
     reviews = relationship('Review', back_populates='user', lazy=True)
 
     def __str__(self):

@@ -58,7 +58,6 @@ class Anime(AnimeBase):
 
 
 class ReviewBase(BaseModel):
-    user_id: int
     status: str
 
 

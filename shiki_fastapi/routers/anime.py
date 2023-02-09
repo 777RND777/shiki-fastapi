@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 
-from .. import database, schemas
+from .. import database, oauth2, models, schemas
 from ..services import anime as anime_services
 
 router = APIRouter(
@@ -24,10 +24,11 @@ def get_anime(title: str, db: Session = Depends(database.get_db)):
 
 
 @router.post('/{title}/review', response_model=schemas.Review)
-def get_anime(title: str, review: schemas.ReviewCreate, db: Session = Depends(database.get_db)):
+def review_anime(title: str, review: schemas.ReviewCreate, db: Session = Depends(database.get_db),
+                 current_user: models.User = Depends(oauth2.get_current_user)):
     db_anime = anime_services.get_anime(db, title=title)
     if db_anime is None:
         raise HTTPException(status_code=404, detail='Anime not found')
-    db_review = anime_services.create_review(db, review, db_anime)
+    db_review = anime_services.create_review(db, review, db_anime, current_user.pk)
     anime_services.update_anime_score(db, db_review.score, db_anime)
     return db_review
