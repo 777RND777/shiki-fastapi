@@ -58,7 +58,6 @@ class Anime(AnimeBase):
 
 
 class ReviewBase(BaseModel):
-    anime_id: int
     user_id: int
     status: str
 
@@ -71,6 +70,7 @@ class ReviewCreate(ReviewBase):
 
 class Review(ReviewBase):
     pk: int
+    anime_id: int
     watched_episodes: Union[int, None]
     score: Union[int, None]
     text: Union[str, None]

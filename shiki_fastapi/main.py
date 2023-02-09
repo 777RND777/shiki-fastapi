@@ -32,6 +32,16 @@ def get_anime(title: str, db: Session = Depends(get_db)):
     return db_anime
 
 
+@app.post('/animes/{title}/review', response_model=schemas.Review)
+def get_anime(title: str, review: schemas.ReviewCreate, db: Session = Depends(get_db)):
+    db_anime = crud.get_anime(db, title=title)
+    if db_anime is None:
+        raise HTTPException(status_code=404, detail='Anime not found')
+    db_review = crud.create_review(db, review, db_anime)
+    crud.update_anime_score(db, db_review.score, db_anime)
+    return db_review
+
+
 @app.get('/{username}', response_model=schemas.User)
 def get_user(username: str, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, username=username)
