@@ -6,6 +6,9 @@ from pydantic import BaseModel
 class GenreBase(BaseModel):
     name: str
 
+    class Config:
+        orm_mode = True
+
 
 class GenreCreate(GenreBase):
     pass
@@ -13,13 +16,14 @@ class GenreCreate(GenreBase):
 
 class Genre(GenreBase):
     pk: int
-
-    class Config:
-        orm_mode = True
+    animes: list['Anime']
 
 
 class StudioBase(BaseModel):
     name: str
+
+    class Config:
+        orm_mode = True
 
 
 class StudioCreate(StudioBase):
@@ -30,9 +34,6 @@ class Studio(StudioBase):
     pk: int
     animes: list['Anime']
 
-    class Config:
-        orm_mode = True
-
 
 class AnimeBase(BaseModel):
     title: str
@@ -41,6 +42,9 @@ class AnimeBase(BaseModel):
     status: str
     genres: list['GenreBase']
     synopsis: str
+
+    class Config:
+        orm_mode = True
 
 
 class AnimeCreate(AnimeBase):
@@ -51,9 +55,6 @@ class Anime(AnimeBase):
     pk: int
     score: float = None
     studio: 'StudioBase'
-
-    class Config:
-        orm_mode = True
 
 
 class ReviewBase(BaseModel):
@@ -81,6 +82,9 @@ class Review(ReviewBase):
 class UserBase(BaseModel):
     username: str
 
+    class Config:
+        orm_mode = True
+
 
 class UserCreate(UserBase):
     password: str
@@ -88,7 +92,3 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     pk: int
-    reviews: list['Review']
-
-    class Config:
-        orm_mode = True
