@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from . import models, schemas
+from .. import models, schemas
 
 
 def get_user_list(db: Session):
