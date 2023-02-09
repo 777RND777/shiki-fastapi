@@ -1,8 +1,7 @@
 from fastapi import HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 
-from .. import schemas
-from ..database import get_db
+from .. import database, schemas
 from ..services import info as info_services
 
 router = APIRouter(
@@ -12,7 +11,7 @@ router = APIRouter(
 
 
 @router.get('/', response_model=schemas.User)
-def get_user(username: str, db: Session = Depends(get_db)):
+def get_user(username: str, db: Session = Depends(database.get_db)):
     db_user = info_services.get_user(db, username=username)
     if db_user is None:
         raise HTTPException(status_code=404, detail='User not found')
@@ -20,7 +19,7 @@ def get_user(username: str, db: Session = Depends(get_db)):
 
 
 @router.get('/list/anime', response_model=list[schemas.Review])
-def get_user_review_list(username: str, db: Session = Depends(get_db)):
+def get_user_review_list(username: str, db: Session = Depends(database.get_db)):
     db_user = info_services.get_user(db, username=username)
     if db_user is None:
         raise HTTPException(status_code=404, detail='User not found')
