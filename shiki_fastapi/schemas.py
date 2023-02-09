@@ -53,7 +53,7 @@ class AnimeCreate(AnimeBase):
 
 class Anime(AnimeBase):
     pk: int
-    score: float = None
+    score: Union[float, None] = None
     studio: 'StudioBase'
 
 
