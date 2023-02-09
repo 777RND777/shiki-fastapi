@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from .. import models, schemas, utils
 
 
-def get_user_list(db: Session):
+def get_user_list(db: Session) -> list[models.User]:
     return db.query(models.User).all()
 
 
-def sign_up(db: Session, user: schemas.UserCreate):
+def sign_up(db: Session, user: schemas.UserCreate) -> models.User:
     hashed_password = utils.hash_password(user.password)
     user.password = hashed_password
 

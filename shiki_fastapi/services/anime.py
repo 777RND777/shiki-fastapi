@@ -1,17 +1,19 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 
 
-def get_anime_list(db: Session):
+def get_anime_list(db: Session) -> list[models.Anime]:
     return db.query(models.Anime).all()
 
 
-def get_anime(db: Session, title: str):
+def get_anime(db: Session, title: str) -> Optional[models.Anime]:
     return db.query(models.Anime).filter(models.Anime.title == title).first()
 
 
-def create_review(db: Session, review: schemas.ReviewCreate, anime: models.Anime, user_id: int):
+def create_review(db: Session, review: schemas.ReviewCreate, anime: models.Anime, user_id: int) -> models.Review:
     db_review = db.query(models.Review).filter((models.Review.anime_id == anime.pk) &
                                                (models.Review.user_id == user_id)).first()
     if db_review:
@@ -28,7 +30,7 @@ def create_review(db: Session, review: schemas.ReviewCreate, anime: models.Anime
     return db_review
 
 
-def update_review(db: Session, db_review: models.Review, review: schemas.ReviewCreate):
+def update_review(db: Session, db_review: models.Review, review: schemas.ReviewCreate) -> models.Review:
     if review.watched_episodes is None:
         db_review.watched_episodes = review.watched_episodes
     if review.status == models.REVIEW_STATUS_CHOICE['COMPLETED'] and db_review.status != review.status:

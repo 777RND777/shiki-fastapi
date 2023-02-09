@@ -12,8 +12,3 @@ app = FastAPI()
 app.include_router(anime.router)
 app.include_router(user.router)
 app.include_router(info.router)
-
-
-@app.get("/")
-def root():
-    return {"message": "Hello World pushing out to ubuntu"}
